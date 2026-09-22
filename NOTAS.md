@@ -24,3 +24,12 @@
 - [uv - Getting Started](https://docs.astral.sh/uv/getting-started/installation/)
 - [Flask - Quickstart](https://flask.palletsprojects.com/en/stable/quickstart/#)
 - [Flask - API With JSON](https://flask.palletsprojects.com/en/stable/quickstart/#apis-with-json)
+
+### 22/09 - dia 2
+- Estudo sobre Gunicorn e WSGI. Criei um projeto a parte para iniciar uma aplicação básica com uv gerenciando dependências e ambiente, Gunicorn responsável pelo servidor e Flask para as rotas.
+- Criei o Dockerfile e o .dockerignore, construí a imagem com `docker build` e subi um container a partir dela com `docker run`. Agora tenho a rota /healthz como resultado em http://localhost:8000/healthz, sendo servida pelo gunicorn dentro do container do Docker, não mais pelo servidor de desenvolvimento do Flask. No momento de criar o Dockerfile, o agente de IA preencheu as flags depois que eu travei, e eu descobri depois que estavam no guia Docker do uv e no --help do gunicorn.
+
+#### Fontes de estudo dia 2:
+- [Servidor WSGI e Gunicorn](https://www.youtube.com/watch?v=lQgiEylR49c)
+- [Documentação Gunicorn](https://gunicorn.org/quickstart/)
+- [Using uv in Docker](https://docs.astral.sh/uv/guides/integration/docker/#using-uv-in-docker)
