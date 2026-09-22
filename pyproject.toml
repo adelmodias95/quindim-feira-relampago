@@ -1,0 +1,27 @@
+[project]
+name = "quindim-feira-relampago"
+version = "0.1.0"
+description = "API de reserva de estoque e pedidos para a Feira Relâmpago - Clube Quindim."
+authors = [
+    { name = "Adelmo Dias", email = "adelmodias@outlook.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "flask>=3.1.3",
+    "gunicorn>=23.0.0",
+    "pydantic>=2.13.5",
+    "pymongo>=4.18.1",
+]
+
+[project.scripts]
+quindim-feira-relampago = "quindim_feira_relampago:main"
+
+[build-system]
+requires = ["uv_build>=0.12.17,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+    "ruff>=0.16.8",
+]

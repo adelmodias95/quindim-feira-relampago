@@ -11,3 +11,4 @@
 - li a especificação algumas vezes para entender o problema
 - Repositório criado
 - Nunca desenvolvi API em Python e MongoDB, então será um desafio para mim.
+- Instalação do uv via site oficial https://docs.astral.sh/uv/getting-started/installation/ - Utilizei a opção de instalar via Homebrew.
