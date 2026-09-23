@@ -2,12 +2,15 @@ from flask import Flask
 from pymongo.errors import ConnectionFailure
 
 from .db import db
+from .erros import registrar_tratadores
 from .livros import buscar_livros
 from .seed import restaurar_catalogo
 
 restaurar_catalogo()
 
 app = Flask(__name__)
+
+registrar_tratadores(app)
 
 
 @app.route("/v1/livros")

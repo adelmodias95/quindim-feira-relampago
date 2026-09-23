@@ -62,13 +62,15 @@
 
 ### 23/09 — dia 3
 
-- O `seed.py` foi escrito pelo agente de IA e eu revisei linha a linha antes de rodar. O `_id` de cada livro é o próprio SKU, e o `disponivel` nasce igual ao `estoque`. O seed usa `bulk_write` com `ReplaceOne` e `upsert=True`, em vez de apagar tudo e inserir. Com 4 workers do gunicorn importando o mesmo módulo, a função roda quatro vezes quase ao mesmo tempo; sendo idempotente, o resultado é o mesmo de uma execução só — sem janela com o catálogo vazio e sem `DuplicateKeyError`.
+- O `seed.py` foi escrito pelo agente de IA e eu revisei linha a linha antes de rodar. O `_id` de cada livro é o próprio SKU, e o `disponivel` nasce igual ao `estoque`. O seed usa `bulk_write` com `ReplaceOne` e `upsert=True`, em vez de apagar tudo e inserir. Com 4 workers do gunicorn importando o mesmo módulo, a função roda quatro vezes quase ao mesmo tempo.
 - O arquivo `livros.py` e a rota `GET /v1/livros` eu escrevi, e o agente de IA revisou. O módulo busca no banco e monta o JSON que é retornado na rota `{"livros": [...]}`.
-
-
+- O `erros.py` foi escrito pelo agente de IA e eu revisei. Ele centraliza o tratamento de erro: as rotas passam a levantar exceção, e um lugar só monta a mensagem `{"erro": {"codigo", "mensagem", "detalhes"}}`. São três tratadores registrados no `app` — um para o `ErroDeNegocio`, exceção minha que carrega status, código, mensagem e detalhes, um para `HTTPException`, que pega os erros do próprio Flask, e um para `Exception`, rede de segurança que devolve 500 em JSON e manda o traceback para o log em vez da resposta.
+- Entendi que `@app.errorhandler` e `@app.route` funcionam do mesmo jeito, rodam uma vez na importação e só registram a função dentro do objeto `app`. Quem executa é o Flask a cada requisição.
 
 #### Fontes de estudo dia 3:
 
 [Mongo.bulkWrite()](https://www.mongodb.com/pt-br/docs/manual/reference/method/mongo.bulkwrite/#mongodb-method-Mongo.bulkWrite)
 [Serialize and deserialize MongoDB documents in Python using PyMongo](https://oneuptime.com/blog/post/2026-03-31-mongodb-serialize-deserialize-documents-python/view)
 [Append to JSON file using Python](https://www.geeksforgeeks.org/python/append-to-json-file-using-python/)
+[Handling Application Errors](https://flask.palletsprojects.com/en/stable/errorhandling/)
+[Werkzeug - HTTP Exceptions](https://werkzeug.palletsprojects.com/en/stable/exceptions/)
