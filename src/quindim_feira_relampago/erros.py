@@ -1,3 +1,4 @@
+from pydantic import ValidationError
 from werkzeug.exceptions import HTTPException
 
 CODIGOS_HTTP = {
@@ -45,3 +46,12 @@ def registrar_tratadores(app):
     def _inesperado(erro):
         app.logger.exception("erro nao tratado")
         return _resposta(500, "erro_interno", "Erro interno.")
+
+    @app.errorhandler(ValidationError)
+    def _validacao(erro):
+        return _resposta(
+            400,
+            "requisicao_invalida",
+            "Corpo ou parâmetros fora do contrato.",
+            {"campos": erro.errors(include_url=False, include_context=False)},
+        )
