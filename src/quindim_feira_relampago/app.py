@@ -1,6 +1,7 @@
-from flask import Flask
+from flask import Flask, request
 from pymongo.errors import ConnectionFailure
 
+from .admin import resetar
 from .db import db
 from .erros import registrar_tratadores
 from .livros import buscar_livros
@@ -11,6 +12,12 @@ restaurar_catalogo()
 app = Flask(__name__)
 
 registrar_tratadores(app)
+
+
+@app.route("/v1/admin/reset", methods=["POST"])
+def resetar_ambiente():
+    resetar(request.headers.get("X-Admin-Token"))
+    return "", 204
 
 
 @app.route("/v1/livros")

@@ -67,6 +67,9 @@
 - O `erros.py` foi escrito pelo agente de IA e eu revisei. Ele centraliza o tratamento de erro: as rotas passam a levantar exceção, e um lugar só monta a mensagem `{"erro": {"codigo", "mensagem", "detalhes"}}`. São três tratadores registrados no `app` — um para o `ErroDeNegocio`, exceção minha que carrega status, código, mensagem e detalhes, um para `HTTPException`, que pega os erros do próprio Flask, e um para `Exception`, rede de segurança que devolve 500 em JSON e manda o traceback para o log em vez da resposta.
 - Entendi que `@app.errorhandler` e `@app.route` funcionam do mesmo jeito, rodam uma vez na importação e só registram a função dentro do objeto `app`. Quem executa é o Flask a cada requisição.
 
+- O `admin.py` com a rota `POST /v1/admin/reset` foi escrito pelo agente de IA, e eu revisei linha a linha e testei. Ele confere o cabeçalho `X-Admin-Token` contra a variável de ambiente, apaga reservas, pedidos e eventos, e reaproveita o `restaurar_catalogo()` do seed.
+- A comparação do token usa `secrets.compare_digest` em vez de `==`. Comparação normal de string para quando encontra o primeiro caractere diferente, e a diferença de tempo entre uma tentativa e outra vaza informação sobre o valor certo.
+
 #### Fontes de estudo dia 3:
 
 [Mongo.bulkWrite()](https://www.mongodb.com/pt-br/docs/manual/reference/method/mongo.bulkwrite/#mongodb-method-Mongo.bulkWrite)
