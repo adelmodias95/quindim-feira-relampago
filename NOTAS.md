@@ -33,11 +33,15 @@
 - .env.example: conexão com o banco, TTL da reserva, token do admin, segredo do webhook. Mantive a URL do MongoDB sem usuário e senha para subir a imagem sem autenticação, também mantive  o host como `mongo` e não `localhost` porque dentro da rede do Compose, um serviço chama o outro pelo nome do serviço.
 - docker-compose.yml: sobe dois serviços, o banco de dados e a api, mas existe uma condição para a API subir, e é que o banco esteja aceitando conexões. Isso é definido em `condition: service_healthy`. Essa condição funcionou na primeira subida onde o mongo db não iniciou por incompatibilidade com o kernel do meu Docker.
 - Criação da conexão Python>Mongo com pymongo. O arquivo db.py possui a conexão com o banco de dados e utiliza as variáveis de ambiente declaradas no .env.
-- app.py agora importa a conexão com o banco de dados e faz uma verificação de saúde utilizando o comando `ping` do Mongo.
+- app.py agora importa a conexão com o banco de dados e faz uma verificação de saúde utilizando o comando `ping` do Mongo. Se a conexão falhar e o banco estiver indisponível, por enquanto, retorna apenas `{"status": "error"}` com código 503.
+- Ruff: Utilizei o Ruff pela primeira vez com o comando `uv run ruff check .`, ele me retornou alguns avisos e eu corrigi todos até receber a mensagem `All checks passed!`.
 
 #### Fontes de estudo dia 2:
 - [Servidor WSGI e Gunicorn](https://www.youtube.com/watch?v=lQgiEylR49c)
 - [Documentação Gunicorn](https://gunicorn.org/quickstart/)
+- [Docker Compose Services](https://docs.docker.com/reference/compose-file/services/)
 - [Using uv in Docker](https://docs.astral.sh/uv/guides/integration/docker/#using-uv-in-docker)
 - [PyMongo](https://pymongo.readthedocs.io/en/stable/api/pymongo/index.html)
+- [pymongo.errors.ConnectionFailure](https://pymongo.readthedocs.io/en/stable/api/pymongo/errors.html#pymongo.errors.ConnectionFailure)
 - [Database Commands](https://www.mongodb.com/pt-br/docs/manual/reference/command/ping/)
+- [The Ruff Linter](https://docs.astral.sh/ruff/linter/)
