@@ -58,6 +58,18 @@ def _expirar_reserva(reserva):
     return False
 
 
+def expirar_vencidas(skus=None):
+    filtro = {
+        "status": "ativa",
+        "expira_em": {"$lte": datetime.now(timezone.utc)},
+    }
+    if skus:
+        filtro["itens.sku"] = {"$in": skus}
+
+    for reserva in db.reservas.find(filtro):
+        _expirar_reserva(reserva)
+
+
 def _iso_z(momento):
     return momento.isoformat().replace("+00:00", "Z")
 
@@ -66,7 +78,8 @@ def criar(entrada):
     descontados = []
     faltantes = []
 
-    # skus = [item.sku for item in entrada.itens]
+    skus = [item.sku for item in entrada.itens]
+    expirar_vencidas(skus)
 
     for item in entrada.itens:
         if _descontar(item.sku, item.quantidade):
@@ -84,7 +97,6 @@ def criar(entrada):
             {"skus": faltantes},
         )
 
-    skus = [item.sku for item in entrada.itens]
     precos = {
         livro["_id"]: livro["preco_centavos"]
         for livro in db.livros.find({"_id": {"$in": skus}})

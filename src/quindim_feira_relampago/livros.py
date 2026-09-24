@@ -1,7 +1,10 @@
 from .db import db
+from .reservas import expirar_vencidas
 
 
 def buscar_livros():
+    expirar_vencidas()
+
     livros_db = db.livros.find()
     catalogo = []
 
