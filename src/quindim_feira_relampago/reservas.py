@@ -41,21 +41,32 @@ def _devolver(sku, quantidade):
     db.livros.update_one({"_id": sku}, {"$inc": {"disponivel": quantidade}})
 
 
+def _expirar_reserva(reserva):
+    resultado = db.reservas.update_one(
+        {
+            "_id": reserva["_id"],
+            "status": "ativa",
+            "expira_em": {"$lte": datetime.now(timezone.utc)},
+        },
+        {"$set": {"status": "expirada"}},
+    )
+
+    if resultado.modified_count == 1:
+        for item in reserva["itens"]:
+            _devolver(item["sku"], item["quantidade"])
+        return True
+    return False
+
+
 def _iso_z(momento):
     return momento.isoformat().replace("+00:00", "Z")
-
-
-def _status_atual(reserva):
-    if reserva["status"] == "ativa" and reserva["expira_em"] <= datetime.now(
-        timezone.utc
-    ):
-        return "expirada"
-    return reserva["status"]
 
 
 def criar(entrada):
     descontados = []
     faltantes = []
+
+    # skus = [item.sku for item in entrada.itens]
 
     for item in entrada.itens:
         if _descontar(item.sku, item.quantidade):
@@ -110,6 +121,11 @@ def buscar(reserva_id):
     if reserva is None:
         raise ErroDeNegocio(404, "nao_encontrado", "Reserva não encontrada.")
 
+    expirado = _expirar_reserva(reserva)
+
+    if expirado:
+        reserva = db.reservas.find_one({"_id": identificador})
+
     return reserva
 
 
@@ -117,7 +133,7 @@ def para_json(reserva):
     return {
         "id": str(reserva["_id"]),
         "cliente_id": reserva["cliente_id"],
-        "status": _status_atual(reserva),
+        "status": reserva["status"],
         "itens": [
             {
                 "sku": item["sku"],

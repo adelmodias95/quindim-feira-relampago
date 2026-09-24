@@ -85,3 +85,13 @@
 - [Pydantic Field](https://pydantic.dev/docs/validation/dev/concepts/fields/)
 - [Pydantic Error Handling](https://pydantic.dev/docs/validation/latest/errors/errors/#_top)
 - [Pydantic Validators](https://pydantic.dev/docs/validation/latest/concepts/validators/)
+
+### 24/09 — dia 4
+
+- Decidi com o agente de IA que a expiração das reservas acontece durante a requisição, e não em um serviço em segundo plano. Escrevi a função `_expirar_reserva` no `reservas.py`. Ela faz um `update_one` com filtro de três condições e um `$set` mudando o status para `"expirada"`.
+
+#### Fontes de estudo dia 4:
+
+- [Comparison Query Operators](https://www.mongodb.com/docs/manual/reference/operator/query-comparison/)
+- [$set](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+- [pymongo — Collection.update_one](https://pymongo.readthedocs.io/en/stable/api/pymongo/collection.html#pymongo.collection.Collection.update_one)
