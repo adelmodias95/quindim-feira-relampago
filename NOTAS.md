@@ -95,3 +95,8 @@
 - [Comparison Query Operators](https://www.mongodb.com/docs/manual/reference/operator/query-comparison/)
 - [$set](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 - [pymongo — Collection.update_one](https://pymongo.readthedocs.io/en/stable/api/pymongo/collection.html#pymongo.collection.Collection.update_one)
+
+### 24/09 - dia 4 parte 2
+- Eu escrevi o cálculo de desconto progressivo e do rateio como uma função isolada e fora do projeto. Rodando `python3 desconto/rateio.py` para testar e com o agente de IA me ajudando a montar todo o código, mas sem escrever nada por mim. Apenas apontando erros e sugestões. Tive bastante dificuldade em entender como chegar no resultado que a RN-08 pede, mesmo com a IA me instruindo a pensar. Mas fui escrevendo, testando, corrigindo até chegar no resultado esperado.
+- Eu comecei utilizando o round(), que em Python arredonda para o par mais próximo e não para cima, e no começo me enganou porque ele acertava o exemplo da spec, mas quando pedi para a IA revisar e ela testou com outra combinação de produtos, ela encontrou o erro. Então me guiou para utilizar a aritmética inteira.
+- A dificuldade que mais levei tempo para concluir foi: Primeiro eu estava pegando o percentual de desconto de cada item separadamente e aplicando em si mesmo. Mas o percentual de desconto deveria ser aplicado sobre o total de todos os itens e depois repartir o desconto total entre os itens de acordo com a proporção de cada item.
