@@ -17,7 +17,7 @@ class ItemEntrada(BaseModel):
 
 
 class ReservaEntrada(BaseModel):
-    cliente_id: str
+    cliente_id: str = Field(min_length=1)
     itens: list[ItemEntrada] = Field(min_length=1)
 
     @field_validator("itens")
