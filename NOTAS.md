@@ -10,7 +10,6 @@
 - 23/09: Recuso com 400 `requisicao_invalida` qualquer reserva que repita o mesmo SKU em mais de uma linha. Encontrei esse problema na revisão. Uma req com `[{QND-001, 2}, {QND-001, 2}]` passava, porque cada linha respeitava o máximo de 3, e gerava dois descontos independentes, violando a RN-03. Preferi recusar em vez de somar as linhas repetidas.
 
 
-
 ## Diário
 
 
@@ -89,6 +88,7 @@
 ### 24/09 — dia 4
 
 - Decidi com o agente de IA que a expiração das reservas acontece durante a requisição, e não em um serviço em segundo plano. Escrevi a função `_expirar_reserva` no `reservas.py`. Ela faz um `update_one` com filtro de três condições e um `$set` mudando o status para `"expirada"`.
+- Escrevi a função `expirar_vencidas` no `reservas.py`, que monta o filtro das reservas vencidas.
 
 #### Fontes de estudo dia 4:
 
