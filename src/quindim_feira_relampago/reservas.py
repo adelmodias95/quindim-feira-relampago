@@ -70,7 +70,7 @@ def expirar_vencidas(skus=None):
         _expirar_reserva(reserva)
 
 
-def _iso_z(momento):
+def iso_z(momento):
     return momento.isoformat().replace("+00:00", "Z")
 
 
@@ -154,6 +154,6 @@ def para_json(reserva):
             }
             for item in reserva["itens"]
         ],
-        "criado_em": _iso_z(reserva["criado_em"]),
-        "expira_em": _iso_z(reserva["expira_em"]),
+        "criado_em": iso_z(reserva["criado_em"]),
+        "expira_em": iso_z(reserva["expira_em"]),
     }
