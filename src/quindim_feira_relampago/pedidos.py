@@ -1,12 +1,13 @@
-from pymongo.errors import DuplicateKeyError
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 from bson import ObjectId
 from bson.errors import InvalidId
+from pymongo.errors import DuplicateKeyError
 
 from .db import db
 from .erros import ErroDeNegocio
-from .reservas import buscar, iso_z
 from .precos import calcular_valores
+from .reservas import buscar, iso_z
 
 
 def confirmar(reserva_id: str):
@@ -26,7 +27,7 @@ def confirmar(reserva_id: str):
         "subtotal_centavos": valores["subtotal_centavos"],
         "desconto_centavos": valores["desconto_centavos"],
         "total_centavos": valores["total_centavos"],
-        "criado_em": datetime.now(timezone.utc).replace(microsecond=0),
+        "criado_em": datetime.now(UTC).replace(microsecond=0),
         "pago_em": None,
     }
 

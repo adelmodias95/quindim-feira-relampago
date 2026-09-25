@@ -46,7 +46,7 @@ def _expirar_reserva(reserva):
         {
             "_id": reserva["_id"],
             "status": "ativa",
-            "expira_em": {"$lte": datetime.now(timezone.utc)},
+            "expira_em": {"$lte": datetime.now(timezone.utc)},  # noqa: UP017
         },
         {"$set": {"status": "expirada"}},
     )
@@ -61,7 +61,7 @@ def _expirar_reserva(reserva):
 def expirar_vencidas(skus=None):
     filtro = {
         "status": "ativa",
-        "expira_em": {"$lte": datetime.now(timezone.utc)},
+        "expira_em": {"$lte": datetime.now(timezone.utc)},  # noqa: UP017
     }
     if skus:
         filtro["itens.sku"] = {"$in": skus}
@@ -102,7 +102,7 @@ def criar(entrada):
         for livro in db.livros.find({"_id": {"$in": skus}})
     }
 
-    criado_em = datetime.now(timezone.utc).replace(microsecond=0)
+    criado_em = datetime.now(timezone.utc).replace(microsecond=0)  # noqa: UP017
     reserva = {
         "cliente_id": entrada.cliente_id,
         "status": "ativa",
