@@ -11,7 +11,6 @@
 - 25/09: Para garantir que uma reserva gere no máximo um pedido, criei um índice único em `reserva_id` na coleção `pedidos`. Consultar primeiro teria o problema de concorrência, dois cliques simultâneos consultam, os dois não acham nada, e os dois inserem.
 
 
-
 ## Diário
 
 
@@ -106,3 +105,4 @@
 ### 25/09 — dia 5
 
 - Escrevi o `pedidos.py` com a confirmação da reserva (RN-06) e a consulta de pedido. O `confirmar` busca a reserva pelo `buscar`, que já expira a vencida antes de devolver, recusa com 410 se estiver expirada, calcula desconto e rateio com o `precos.py`, e tenta inserir o pedido. Quem consegue inserir marca a reserva como `confirmada` e a rota responde 201. Quem esbarra no índice único devolve o pedido que já existe e a rota responde 200. O código é meu, o agente de IA revisou e apontou os erros.
+- Escrevi o `webhooks.py` com o `POST /v1/webhooks/pagamento`. A assinatura é um HMAC-SHA256 do corpo com o `WEBHOOK_SEGREDO`, comparado com `compare_digest`.
