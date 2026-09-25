@@ -8,6 +8,8 @@
 - 23/09: O seed restaura o catálogo com `ReplaceOne` e `upsert=True` em vez de apagar tudo e inserir. Como a função roda na importação do módulo, os 4 workers do gunicorn a executam quase ao mesmo tempo. Um seed do tipo "apaga e insere" abriria uma janela com o catálogo vazio e faria o segundo worker tomar `DuplicateKeyError`. Sendo idempotente, rodar uma ou quatro vezes deixa o banco no mesmo estado, e a concorrência deixa de importar. A mesma função é reaproveitada pelo `POST /v1/admin/reset`.
 - 23/09: Decidi mapear qualquer 4xx não previsto para `requisicao_invalida` e qualquer 5xx para `erro_interno`.
 - 23/09: Recuso com 400 `requisicao_invalida` qualquer reserva que repita o mesmo SKU em mais de uma linha. Encontrei esse problema na revisão. Uma req com `[{QND-001, 2}, {QND-001, 2}]` passava, porque cada linha respeitava o máximo de 3, e gerava dois descontos independentes, violando a RN-03. Preferi recusar em vez de somar as linhas repetidas.
+- 25/09: Para garantir que uma reserva gere no máximo um pedido, criei um índice único em `reserva_id` na coleção `pedidos`. Consultar primeiro teria o problema de concorrência, dois cliques simultâneos consultam, os dois não acham nada, e os dois inserem.
+
 
 
 ## Diário
@@ -100,3 +102,7 @@
 - Eu escrevi o cálculo de desconto progressivo e do rateio como uma função isolada e fora do projeto. Rodando `python3 desconto/rateio.py` para testar e com o agente de IA me ajudando a montar todo o código, mas sem escrever nada por mim. Apenas apontando erros e sugestões. Tive bastante dificuldade em entender como chegar no resultado que a RN-08 pede, mesmo com a IA me instruindo a pensar. Mas fui escrevendo, testando, corrigindo até chegar no resultado esperado.
 - Eu comecei utilizando o round(), que em Python arredonda para o par mais próximo e não para cima, e no começo me enganou porque ele acertava o exemplo da spec, mas quando pedi para a IA revisar e ela testou com outra combinação de produtos, ela encontrou o erro. Então me guiou para utilizar a aritmética inteira.
 - A dificuldade que mais levei tempo para concluir foi: Primeiro eu estava pegando o percentual de desconto de cada item separadamente e aplicando em si mesmo. Mas o percentual de desconto deveria ser aplicado sobre o total de todos os itens e depois repartir o desconto total entre os itens de acordo com a proporção de cada item.
+
+### 25/09 — dia 5
+
+- Escrevi o `pedidos.py` com a confirmação da reserva (RN-06) e a consulta de pedido. O `confirmar` busca a reserva pelo `buscar`, que já expira a vencida antes de devolver, recusa com 410 se estiver expirada, calcula desconto e rateio com o `precos.py`, e tenta inserir o pedido. Quem consegue inserir marca a reserva como `confirmada` e a rota responde 201. Quem esbarra no índice único devolve o pedido que já existe e a rota responde 200. O código é meu, o agente de IA revisou e apontou os erros.
