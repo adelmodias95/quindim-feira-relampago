@@ -8,6 +8,7 @@ from .livros import buscar_livros
 from .pedidos import buscar_pedido, confirmar, pedido_para_json
 from .reservas import ReservaEntrada, buscar, criar, para_json
 from .seed import restaurar_catalogo
+from .webhooks import processar_webhook
 
 criar_indices()
 restaurar_catalogo()
@@ -60,3 +61,9 @@ def healthz():
 
     except ConnectionFailure:
         return {"status": "error"}, 503
+
+
+@app.route("/v1/webhooks/pagamento", methods=["POST"])
+def receber_webhook():
+    processar_webhook(request.get_data(), request.headers.get("X-Assinatura"))
+    return {"recebido": True}, 200

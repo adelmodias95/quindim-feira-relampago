@@ -11,3 +11,4 @@ db = client[DB_NAME]
 
 def criar_indices():
     db.pedidos.create_index({"reserva_id": 1}, unique=True)
+    db.eventos.create_index({"evento_id": 1}, unique=True)
