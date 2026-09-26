@@ -32,7 +32,7 @@ def listar_livros():
 
 @app.route("/v1/reservas", methods=["POST"])
 def criar_reserva():
-    entrada = ReservaEntrada(**request.get_json())
+    entrada = ReservaEntrada.model_validate(request.get_json())
     reserva = criar(entrada)
     return para_json(reserva), 201
 
