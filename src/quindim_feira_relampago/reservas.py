@@ -37,7 +37,7 @@ def _descontar(sku, quantidade):
     return resultado.modified_count == 1
 
 
-def _devolver(sku, quantidade):
+def devolver(sku, quantidade):
     db.livros.update_one({"_id": sku}, {"$inc": {"disponivel": quantidade}})
 
 
@@ -53,7 +53,7 @@ def _expirar_reserva(reserva):
 
     if resultado.modified_count == 1:
         for item in reserva["itens"]:
-            _devolver(item["sku"], item["quantidade"])
+            devolver(item["sku"], item["quantidade"])
         return True
     return False
 
@@ -89,7 +89,7 @@ def criar(entrada):
 
     if faltantes:
         for item in descontados:
-            _devolver(item.sku, item.quantidade)
+            devolver(item.sku, item.quantidade)
         raise ErroDeNegocio(
             409,
             "estoque_insuficiente",
